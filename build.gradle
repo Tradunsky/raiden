@@ -7,7 +7,3 @@ repositories {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.3'
 }
-
-task tsung(type: Exec) {
-    commandLine "echo", "hello"
-}

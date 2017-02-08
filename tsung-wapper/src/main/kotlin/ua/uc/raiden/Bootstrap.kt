@@ -6,8 +6,9 @@ import java.util.concurrent.TimeUnit
 
 
 fun main(args: Array<String>) {
-    val testCaseFilePath = "/home/o111o1oo/dev/code/pets/raiden/tsung-wapper/src/main/resources/http_simple.xml"
-    val tsungProcess = ProcessBuilder("tsung", "start", "-f", testCaseFilePath)
+    val testCaseFilePath = "/home/o111o1oo/dev/code/pets/raiden/tsung-wapper/src/main/resources/http_xauth.xml"
+    val logDir = "/home/o111o1oo/dev/code/pets/raiden/tsung-wapper/log"
+    val tsungProcess = ProcessBuilder("tsung", "-f", testCaseFilePath, "-l", logDir, "start")
             .redirectErrorStream(true)
             .start()
     watch(tsungProcess)
@@ -17,8 +18,9 @@ fun main(args: Array<String>) {
 private fun watch(process: Process) {
     object : Thread() {
         override fun run() {
-            val input = BufferedReader(InputStreamReader(process.inputStream))
-            input.lines().forEach { println(it) }
+            BufferedReader(InputStreamReader(process.inputStream)).use {
+                it.lines().forEach(::println)
+            }
         }
     }.start()
 }

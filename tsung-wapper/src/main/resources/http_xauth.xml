@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "tsung-1.0.dtd">
+<tsung loglevel="notice" version="1.0" dumptraffic="true">
+
+    <!-- Client side setup -->
+    <clients>
+        <client host="localhost" use_controller_vm="true"/>
+    </clients>
+
+    <!-- Server side setup -->
+    <servers>
+        <server host="localhost" port="8080" type="tcp"/>
+    </servers>
+
+    <!-- to start os monitoring (cpu, network, memory). Use an erlang
+    agent on the remote machine or SNMP. erlang is the default -->
+    <!--<monitoring>-->
+        <!--<monitor host="myserver" type="snmp"/>-->
+    <!--</monitoring>-->
+
+    <load>
+        <!-- several arrival phases can be set: for each phase, you can set
+        the mean inter-arrival time between new clients and the phase
+        duration -->
+        <arrivalphase phase="1" duration="10" unit="minute">
+            <users interarrival="2" unit="second"></users>
+        </arrivalphase>
+    </load>
+
+    <options>
+        <option type="ts_http" name="user_agent">
+            <user_agent probability="80">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36
+            </user_agent>
+            <user_agent probability="20">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36
+            </user_agent>
+        </option>
+    </options>
+
+    <!-- start a session for a http user. the probability is the
+    frequency of this type os session. The sum of all session's
+    probabilities must be 100 -->
+
+    <sessions>
+        <session name="login" probability="100" type="ts_http">
+            <request>
+                <http url="/api/v1/pos/backoffice/login" method="POST" version="1.1"
+                      content_type="application/json; charset=UTF-8" contents="{&quot;employeeId&quot;:&quot;1&quot;,&quot;password&quot;:&quot;admin&quot;}">
+                    <!--<http_header name="X-DSN" value="DSN01"/>-->
+                </http>
+            </request>
+
+            <thinktime value="20" random="true"/>
+        </session>
+    </sessions>
+</tsung>
